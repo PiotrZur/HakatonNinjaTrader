@@ -63,7 +63,36 @@ namespace NinjaTrader.Custom.Strategies
             }
         }
 
+        public class TakeProfitSignal : PositionExitSignal
+        {
+            public TakeProfitSignal(StrategyAISample strategy, string signalName)
+                : base(strategy, signalName, AdviceType.StopLoss)
+            {
+            }
 
+            public override IEnumerable<CloseAdvice> CloseAdvices
+            {
+                get
+                {
+                    double currentPrice = this.Strategy.Close[0];
+                    double longRange = this.Signal.LongRange;
+                    double shortRange = this.Signal.ShortRange;
+
+                    double takeProfitPrice;
+                    if (longRange > shortRange)
+                    {
+                        takeProfitPrice = currentPrice +  longRange * this.Strategy.TakeProfitModifier;
+                    }
+                    else
+                    {
+                        takeProfitPrice = currentPrice - shortRange  * this.Strategy.TakeProfitModifier;
+                    }
+
+                    yield return this.CloseAdvice(this.InitialPositionSize, takeProfitPrice);
+
+                }
+            }
+        }
 
 
         protected override IEnumerable<PositionExitSignal> CreateExitSignals()
@@ -71,6 +100,7 @@ namespace NinjaTrader.Custom.Strategies
             // only one exit, after the fixed amount of time
             yield return new TimeExitSignal(this, "Time Exit");
             yield return new StopLossSignal(this, "Stop loss");
+            //yield return new TakeProfitSignal(this, "TakeProfit");
         }
     }
 }

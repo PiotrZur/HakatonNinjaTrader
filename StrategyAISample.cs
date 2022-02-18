@@ -32,8 +32,8 @@ namespace NinjaTrader.Custom.Strategies
                 this.VolatilityBarsPeriod = BarPeriod.Day;
                 this.VolatilityBarsCount = 10;
 
-                this.StopLossModifier = 1;
-                this.RangeDifferenceToOpenPosition = 0;
+                this.StopLossModifier = 0.026;
+                this.RangeDifferenceToOpenPosition = 0.19;
                 this.TakeProfitModifier = 1;
                 this.PositionSizeModifier = 1;
     }
