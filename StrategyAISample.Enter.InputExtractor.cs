@@ -133,25 +133,26 @@ namespace NinjaTrader.Custom.Strategies
                     var intendedOpenTime = suffixBars.Last().Time;
 
 
+                    // macd 1- 4, stochasticK1, D1, k2, D2, K3, D3
+                    
+                    double[] indicators = new double[10];
+                    indicators[0] = this.strategy.MACD(12, 26, 9)[0];
+                    indicators[1] = this.strategy.MACD(14, 24, 9)[0];
+                    indicators[2] = this.strategy.MACD(6, 13, 9)[0];
+                    indicators[3] = this.strategy.MACD(12, 26, 16)[0];
 
-					double sma = this.strategy.SMA(this.strategy.SMAPeriod)[0];
-                    double MACD1 = this.strategy.MACD(12, 26, 9)[0];
-                    double MACD2 = this.strategy.MACD(14, 24, 9)[0];
-                    double MACD3 = this.strategy.MACD(6, 13, 9)[0];
-                    double MACD4 = this.strategy.MACD(12, 26, 16)[0];
-
-                    double stichasticK1 = this.strategy.Stochastics(10, 14, 6).K[0];
-                    double stichasticD1 = this.strategy.Stochastics(10, 14, 6).D[0];
-                    double stichasticK2 = this.strategy.Stochastics(10, 14, 12).K[0];
-                    double stichasticD2 = this.strategy.Stochastics(10, 14, 12).D[0];
-                    double stichasticK3 = this.strategy.Stochastics(5, 7, 6).K[0];
-                    double stichasticD3 = this.strategy.Stochastics(5, 7, 6).D[0];
+                    indicators[4] = this.strategy.Stochastics(10, 14, 6).K[0];
+                    indicators[5] = this.strategy.Stochastics(10, 14, 6).D[0];
+                    indicators[6] = this.strategy.Stochastics(10, 14, 12).K[0];
+                    indicators[7] = this.strategy.Stochastics(10, 14, 12).D[0];
+                    indicators[8] = this.strategy.Stochastics(5, 7, 6).K[0];
+                    indicators[9] = this.strategy.Stochastics(5, 7, 6).D[0];
                     return new SampleInputVector(
                         intendedOpenTime,
                         this.currentConsolidation,
                         suffixBars,
                         volatility,
-						sma);
+						indicators);
                 }
             }
 
@@ -180,6 +181,11 @@ namespace NinjaTrader.Custom.Strategies
                     return atr[0];
                 }
             }
+        }
+
+        public class IndicatorData
+        {
+
         }
     }
 }

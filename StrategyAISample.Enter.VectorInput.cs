@@ -34,7 +34,7 @@ namespace NinjaTrader.Custom.Strategies
                 this.rawInput = new object[0];
             }
 
-            public SampleInputVector(DateTime intendedOpenTime, ConsolidationRange consolidation, List<Bar> lastBars, double referenceVolatility, double sma)
+            public SampleInputVector(DateTime intendedOpenTime, ConsolidationRange consolidation, List<Bar> lastBars, double referenceVolatility, double[] indicators)
                 : base(intendedOpenTime)
             {
                 this.consolidation = consolidation;
@@ -95,22 +95,51 @@ namespace NinjaTrader.Custom.Strategies
                     this.rawInput[offset + 5 + 4] = nextBar.Close;
                 }
 
+                //stochastic przez 100 podzielic
+                //+1 /2 dla MACD    -1 - > 0 1 ->1 
+         
                 int normalizedPosition = lastBars.Count * 5;
                 int position = lastBars.Count * 5 + 5;
+
                 for (int i = 0; i <=4; i++)
                 {
-                    this.rawHeader[this.rawHeader.Length - 1 + i] = "MACD" + (i+1);
-                    this.normalizedHeader[this.normalizedHeader.Length - 1] = "Indicator";
+                    this.rawHeader[position + i] = "MACD" + (i+1);
+                    this.normalizedHeader[normalizedPosition + i] = "MACD" + (i + 1);
 
-                    this.rawInput[this.rawHeader.Length - 1] = sma;
-                    this.normalizedInput[this.normalizedHeader.Length - 1] = sma;
+                    this.rawInput[position + i] = indicators[i];
+                    this.normalizedInput[normalizedPosition + i] = indicators[i];
                 }
 				
-				this.rawHeader[this.rawHeader.Length-1]="Indicatior";
-				this.normalizedHeader[this.normalizedHeader.Length-1]="Indicator";
-				
-				this.rawInput[this.rawHeader.Length-1] = sma;
-				this.normalizedInput[this.normalizedHeader.Length-1] = sma;
+				this.rawHeader[position + 4] ="StochasticsK1";
+                this.rawInput[position + 4] = indicators[4];
+                this.normalizedHeader[normalizedPosition + 4] = "StochasticsK1";
+				this.normalizedInput[normalizedPosition + 4] = indicators[4]/100;
+
+                this.rawHeader[position + 5] = "StochasticsD1";
+                this.rawInput[position + 5] = indicators[5];
+                this.normalizedHeader[normalizedPosition + 5] = "StochasticsD1";
+                this.normalizedInput[normalizedPosition + 5] = indicators[5] / 100;
+
+                this.rawHeader[position + 6] = "StochasticsK2";
+                this.rawInput[position + 6] = indicators[6];
+                this.normalizedHeader[normalizedPosition + 6] = "StochasticsK2";
+                this.normalizedInput[normalizedPosition + 6] = indicators[6] / 100;
+
+                this.rawHeader[position + 7] = "StochasticsD2";
+                this.rawInput[position + 7] = indicators[7];
+                this.normalizedHeader[normalizedPosition + 7] = "StochasticsD2";
+                this.normalizedInput[normalizedPosition + 7] = indicators[7] / 100;
+
+                this.rawHeader[position + 8] = "StochasticsK3";
+                this.rawInput[position + 8] = indicators[8];
+                this.normalizedHeader[normalizedPosition + 8] = "StochasticsK3";
+                this.normalizedInput[normalizedPosition + 8] = indicators[8] / 100;
+
+                this.rawHeader[position + 9] = "StochasticsD3";
+                this.rawInput[position + 9] = indicators[9];
+                this.normalizedHeader[normalizedPosition + 9] = "StochasticsD3";
+                this.normalizedInput[normalizedPosition + 9] = indicators[9] / 100;
+               
             }
 
             public double ReferenceVolatility
