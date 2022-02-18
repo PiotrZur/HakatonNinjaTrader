@@ -1,4 +1,4 @@
-﻿using NinjaTrader.Custom.Extensions.Bars;
+using NinjaTrader.Custom.Extensions.Bars;
 using NinjaTrader.Custom.Extensions.Consolidation;
 using System;
 using System.Collections.Generic;
@@ -34,17 +34,17 @@ namespace NinjaTrader.Custom.Strategies
                 this.rawInput = new object[0];
             }
 
-            public SampleInputVector(DateTime intendedOpenTime, ConsolidationRange consolidation, List<Bar> lastBars, double referenceVolatility)
+            public SampleInputVector(DateTime intendedOpenTime, ConsolidationRange consolidation, List<Bar> lastBars, double referenceVolatility, double sma)
                 : base(intendedOpenTime)
             {
                 this.consolidation = consolidation;
                 this.referenceVolatility = referenceVolatility;
 
                 // * 5, since we will put 5 values per each bar
-                this.normalizedHeader = new string[lastBars.Count * 5];
+                this.normalizedHeader = new string[lastBars.Count * 5 + 10];
 
                 // +5, since we'll also include the consolidation coorinates (start / end / high / low) and reference volatility)
-                this.rawHeader = new string[lastBars.Count * 5 + 5];
+                this.rawHeader = new string[lastBars.Count * 5 + 15];
 
                 this.normalizedInput = new double[this.normalizedHeader.Length];
                 this.rawInput = new object[this.rawHeader.Length];
@@ -94,6 +94,23 @@ namespace NinjaTrader.Custom.Strategies
                     this.rawInput[offset + 5 + 3] = nextBar.Low;
                     this.rawInput[offset + 5 + 4] = nextBar.Close;
                 }
+
+                int normalizedPosition = lastBars.Count * 5;
+                int position = lastBars.Count * 5 + 5;
+                for (int i = 0; i <=4; i++)
+                {
+                    this.rawHeader[this.rawHeader.Length - 1 + i] = "MACD" + (i+1);
+                    this.normalizedHeader[this.normalizedHeader.Length - 1] = "Indicator";
+
+                    this.rawInput[this.rawHeader.Length - 1] = sma;
+                    this.normalizedInput[this.normalizedHeader.Length - 1] = sma;
+                }
+				
+				this.rawHeader[this.rawHeader.Length-1]="Indicatior";
+				this.normalizedHeader[this.normalizedHeader.Length-1]="Indicator";
+				
+				this.rawInput[this.rawHeader.Length-1] = sma;
+				this.normalizedInput[this.normalizedHeader.Length-1] = sma;
             }
 
             public double ReferenceVolatility

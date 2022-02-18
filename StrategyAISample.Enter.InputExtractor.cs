@@ -1,4 +1,4 @@
-﻿using NinjaTrader.Custom.Extensions;
+using NinjaTrader.Custom.Extensions;
 using NinjaTrader.Custom.Extensions.Bars;
 using NinjaTrader.Custom.Extensions.Consolidation;
 using System;
@@ -15,6 +15,7 @@ namespace NinjaTrader.Custom.Strategies
 
             private ConsolidationRange currentConsolidation;
             private DateTime currentConsolidationEndOfLife;
+			private double sma;
 
             public SampleInputVectorExtractor(StrategyAISample strategy)
             {
@@ -121,7 +122,6 @@ namespace NinjaTrader.Custom.Strategies
                     }
 
                     var volatility = this.ReferenceVolatility;
-
                     // it might be that the volatility can't be calculated - as it will typically require several bars
                     // of a higher period (like day), so if we start at day 0 then it will be undefined at start
                     if (Double.IsNaN(volatility))
@@ -132,11 +132,26 @@ namespace NinjaTrader.Custom.Strategies
                     // in our case: the last bar in the suffix formation is the key driver of making our intent to open a new position
                     var intendedOpenTime = suffixBars.Last().Time;
 
+
+
+					double sma = this.strategy.SMA(this.strategy.SMAPeriod)[0];
+                    double MACD1 = this.strategy.MACD(12, 26, 9)[0];
+                    double MACD2 = this.strategy.MACD(14, 24, 9)[0];
+                    double MACD3 = this.strategy.MACD(6, 13, 9)[0];
+                    double MACD4 = this.strategy.MACD(12, 26, 16)[0];
+
+                    double stichasticK1 = this.strategy.Stochastics(10, 14, 6).K[0];
+                    double stichasticD1 = this.strategy.Stochastics(10, 14, 6).D[0];
+                    double stichasticK2 = this.strategy.Stochastics(10, 14, 12).K[0];
+                    double stichasticD2 = this.strategy.Stochastics(10, 14, 12).D[0];
+                    double stichasticK3 = this.strategy.Stochastics(5, 7, 6).K[0];
+                    double stichasticD3 = this.strategy.Stochastics(5, 7, 6).D[0];
                     return new SampleInputVector(
                         intendedOpenTime,
                         this.currentConsolidation,
                         suffixBars,
-                        volatility);
+                        volatility,
+						sma);
                 }
             }
 
@@ -162,7 +177,6 @@ namespace NinjaTrader.Custom.Strategies
                     var atr = this.strategy.ATR(
                         this.strategy.referenceVolatilityBarsCollection.NinjaBars,
                         this.strategy.VolatilityBarsCount);
-
                     return atr[0];
                 }
             }

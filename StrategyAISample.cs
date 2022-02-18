@@ -1,4 +1,4 @@
-﻿using NinjaTrader.Custom.Extensions;
+using NinjaTrader.Custom.Extensions;
 using NinjaTrader.Custom.Extensions.Bars;
 using NinjaTrader.Gui;
 using NinjaTrader.NinjaScript;
@@ -31,6 +31,8 @@ namespace NinjaTrader.Custom.Strategies
 
                 this.VolatilityBarsPeriod = BarPeriod.Day;
                 this.VolatilityBarsCount = 10;
+				
+				this.SMAPeriod = 10;
             }
             else if (this.State == State.Configure)
             {
@@ -88,5 +90,9 @@ namespace NinjaTrader.Custom.Strategies
         [NinjaScriptProperty]
         [Display(Name = "Bar Count", Order = 1, GroupName = ReferenceVolatilityGroupName)]
         public int VolatilityBarsCount { get; set; }
+		
+		[NinjaScriptProperty]
+        [Display(Name = "SMA period", Order = 1, GroupName = "CustomParameters")]
+        public int SMAPeriod { get; set; }
     }
 }
