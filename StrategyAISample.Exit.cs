@@ -18,7 +18,6 @@ namespace NinjaTrader.Custom.Strategies
             public TimeExitSignal(StrategyAISample strategy, string signalName)
                 : base(strategy, signalName, AdviceType.StopLoss)
             {
-                
             }
 
             public override IEnumerable<CloseAdvice> CloseAdvices
@@ -33,13 +32,45 @@ namespace NinjaTrader.Custom.Strategies
                 }
             }
         }
-	
+
+        public class StopLossSignal : PositionExitSignal
+        {
+            public StopLossSignal(StrategyAISample strategy, string signalName)
+                : base(strategy, signalName, AdviceType.StopLoss)
+            {
+            }
+
+            public override IEnumerable<CloseAdvice> CloseAdvices
+            {
+                get
+                {
+                    double currentPrice = this.Strategy.Close[0];
+                    double longRange = this.Signal.LongRange;
+                    double shortRange = this.Signal.ShortRange;
+
+                    double stopLossPrice;
+                    if (longRange > shortRange)
+                    {
+                       stopLossPrice = currentPrice - Math.Abs(longRange - shortRange) * this.Strategy.StopLossModifier;
+                    } else
+                    {
+                        stopLossPrice = currentPrice + Math.Abs(longRange - shortRange) * this.Strategy.StopLossModifier;
+                    }
+                   
+                        yield return this.CloseAdvice(this.InitialPositionSize, stopLossPrice);
+
+                }
+            }
+        }
+
+
+
 
         protected override IEnumerable<PositionExitSignal> CreateExitSignals()
         {
             // only one exit, after the fixed amount of time
             yield return new TimeExitSignal(this, "Time Exit");
-
+            yield return new StopLossSignal(this, "Stop loss");
         }
     }
 }
