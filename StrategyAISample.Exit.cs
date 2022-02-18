@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+using NinjaTrader.Custom.Extensions.Consolidation;
+using NinjaTrader.Gui;
+using NinjaTrader.NinjaScript.DrawingTools;
+using System;
+using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace NinjaTrader.Custom.Strategies
 {
@@ -13,6 +18,7 @@ namespace NinjaTrader.Custom.Strategies
             public TimeExitSignal(StrategyAISample strategy, string signalName)
                 : base(strategy, signalName, AdviceType.StopLoss)
             {
+                
             }
 
             public override IEnumerable<CloseAdvice> CloseAdvices
@@ -27,11 +33,13 @@ namespace NinjaTrader.Custom.Strategies
                 }
             }
         }
+	
 
         protected override IEnumerable<PositionExitSignal> CreateExitSignals()
         {
             // only one exit, after the fixed amount of time
             yield return new TimeExitSignal(this, "Time Exit");
+
         }
     }
 }

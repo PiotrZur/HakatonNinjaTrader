@@ -143,8 +143,10 @@ namespace NinjaTrader.Custom.Strategies
 
                     indicators[4] = this.strategy.Stochastics(10, 14, 6).K[0];
                     indicators[5] = this.strategy.Stochastics(10, 14, 6).D[0];
+
                     indicators[6] = this.strategy.Stochastics(10, 14, 12).K[0];
                     indicators[7] = this.strategy.Stochastics(10, 14, 12).D[0];
+
                     indicators[8] = this.strategy.Stochastics(5, 7, 6).K[0];
                     indicators[9] = this.strategy.Stochastics(5, 7, 6).D[0];
                     return new SampleInputVector(

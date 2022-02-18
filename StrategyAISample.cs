@@ -31,7 +31,12 @@ namespace NinjaTrader.Custom.Strategies
 
                 this.VolatilityBarsPeriod = BarPeriod.Day;
                 this.VolatilityBarsCount = 10;
-            }
+
+                this.StopLossModifier = 1;
+                this.RangeDifferenceToOpenPosition = 0;
+                this.TakeProfitModifier = 1;
+                this.PositionSizeModifier = 1;
+    }
             else if (this.State == State.Configure)
             {
                 this.consolidationBarsCollection = this.GetBarsBrowser(this.ConsolidationBarPeriod);
@@ -88,5 +93,22 @@ namespace NinjaTrader.Custom.Strategies
         [NinjaScriptProperty]
         [Display(Name = "Bar Count", Order = 1, GroupName = ReferenceVolatilityGroupName)]
         public int VolatilityBarsCount { get; set; }
+
+
+        [NinjaScriptProperty]
+        [Display(Name = "StopLoss modifier", Order = 0, GroupName = "Strategy modifiers")]
+        public double StopLossModifier { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = "TakProift modifier", Order = 1, GroupName = "Strategy modifiers")]
+        public double TakeProfitModifier { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = "Range Difference To Open Position", Order = 2, GroupName = "Strategy modifiers")]
+        public double RangeDifferenceToOpenPosition { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = "Position Size Modifier", Order = 3, GroupName = "Strategy modifiers")]
+        public double PositionSizeModifier { get; set; }
     }
 }
